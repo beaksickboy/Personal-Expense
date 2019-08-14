@@ -1,11 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:camera/camera.dart';
+
 import 'package:personal_expense/transaction-model.dart';
 import 'package:personal_expense/widget/transaction/transaction-form.dart';
 import 'package:personal_expense/widget/transaction/transaction-list.dart';
+// import 'package:personal_expense/widget/camera-play/camera-play.dart';
 
-void main() => runApp(MyApp());
+
+void main() async {
+  // final availlableCameras = await availableCameras();
+
+  // final firstCamera = availlableCameras.first;
+
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
+  // final camera;
+
+  MyApp();
+  
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -32,6 +46,7 @@ class MyApp extends StatelessWidget {
               ),
         ),
       ),
+      // home: MyHomePage(),
       home: MyHomePage(),
     );
   }
@@ -64,8 +79,8 @@ class _MyHomePageState extends State<MyHomePage> {
       builder: (context) {
         return GestureDetector(
           child: TransactionForm(_addTransaction),
-          onTap: () {},
-          behavior: HitTestBehavior.opaque,
+          onTap: () {},// Not clode modal when tap on
+          behavior: HitTestBehavior.opaque, // Not clode modal when tap on
         );
       },
     );

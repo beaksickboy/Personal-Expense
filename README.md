@@ -1,1 +1,1 @@
-Manage you personal expense
+Baby step to flutter :D
