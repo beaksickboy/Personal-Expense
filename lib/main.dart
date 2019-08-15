@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 
 import 'package:personal_expense/transaction-model.dart';
+import 'package:personal_expense/widget/transaction/chart.dart';
 import 'package:personal_expense/widget/transaction/transaction-form.dart';
 import 'package:personal_expense/widget/transaction/transaction-list.dart';
 // import 'package:personal_expense/widget/camera-play/camera-play.dart';
-
 
 void main() async {
   // final availlableCameras = await availableCameras();
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   // final camera;
 
   MyApp();
-  
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -79,11 +79,19 @@ class _MyHomePageState extends State<MyHomePage> {
       builder: (context) {
         return GestureDetector(
           child: TransactionForm(_addTransaction),
-          onTap: () {},// Not clode modal when tap on
+          onTap: () {}, // Not clode modal when tap on
           behavior: HitTestBehavior.opaque, // Not clode modal when tap on
         );
       },
     );
+  }
+
+  List<TransactionModel> get _recentTransactions {
+    return _transactions.where((tx) {
+      return tx.date.isAfter(DateTime.now().subtract(
+        Duration(days: 7),
+      ));
+    }).toList();
   }
 
   @override
@@ -101,9 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Card(
-              child: Text('sdasd'),
-            ),
+            Chart(_recentTransactions),
             TransactionList(
               transactions: _transactions,
             )
