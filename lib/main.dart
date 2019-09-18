@@ -1,23 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:camera/camera.dart';
 
 import 'package:personal_expense/transaction-model.dart';
 import 'package:personal_expense/widget/transaction/chart.dart';
 import 'package:personal_expense/widget/transaction/transaction-form.dart';
 import 'package:personal_expense/widget/transaction/transaction-list.dart';
-// import 'package:personal_expense/widget/camera-play/camera-play.dart';
 
 void main() async {
-  // final availlableCameras = await availableCameras();
-
-  // final firstCamera = availlableCameras.first;
-
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // final camera;
-
   MyApp();
 
   // This widget is the root of your application.
@@ -26,15 +18,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.purple,
         fontFamily: 'Pacifico',
         appBarTheme: AppBarTheme(
@@ -63,6 +46,20 @@ class _MyHomePageState extends State<MyHomePage> {
         id: 'One', amount: 10.0, date: DateTime.now(), title: 'Shoe'),
     TransactionModel(
         id: 'Two', amount: 10.0, date: DateTime.now(), title: 'Bag'),
+    TransactionModel(
+        id: 'One', amount: 10.0, date: DateTime.now(), title: 'Shoe'),
+    TransactionModel(
+        id: 'One', amount: 10.0, date: DateTime.now(), title: 'Shoe'),
+    TransactionModel(
+        id: 'One', amount: 10.0, date: DateTime.now(), title: 'Shoe'),
+    TransactionModel(
+        id: 'One', amount: 10.0, date: DateTime.now(), title: 'Shoe'),
+    TransactionModel(
+        id: 'One', amount: 10.0, date: DateTime.now(), title: 'Shoe'),
+    TransactionModel(
+        id: 'One', amount: 10.0, date: DateTime.now(), title: 'Shoe'),
+    TransactionModel(
+        id: 'One', amount: 10.0, date: DateTime.now(), title: 'Shoe'),
   ];
 
   void _addTransaction(String title, double amount) {
@@ -79,8 +76,8 @@ class _MyHomePageState extends State<MyHomePage> {
       builder: (context) {
         return GestureDetector(
           child: TransactionForm(_addTransaction),
-          onTap: () {}, // Not clode modal when tap on
-          behavior: HitTestBehavior.opaque, // Not clode modal when tap on
+          onTap: () {}, // Not close modal when tap on
+          behavior: HitTestBehavior.opaque, // Not close modal when tap on
         );
       },
     );
@@ -96,22 +93,34 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final appBar = AppBar(
+      title: Text('Personal Expense'),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () => showTransactionForm(context),
+        )
+      ],
+    );
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Personal Expense'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () => showTransactionForm(context),
-          )
-        ],
-      ),
+      appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Chart(_recentTransactions),
-            TransactionList(
-              transactions: _transactions,
+            Container(
+              height: (MediaQuery.of(context).size.height -
+                      appBar.preferredSize.height - MediaQuery.of(context).padding.top) *
+                  0.4,
+              child: Chart(_recentTransactions),
+            ),
+            Container(
+              height: (MediaQuery.of(context).size.height -
+                      appBar.preferredSize.height - MediaQuery.of(context).padding.top) *
+                  0.6,
+              child: TransactionList(
+                transactions: _transactions,
+              ),
             )
           ],
         ),
