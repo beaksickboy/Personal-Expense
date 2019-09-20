@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:personal_expense/transaction-model.dart';
 import 'package:personal_expense/widget/transaction/chart.dart';
@@ -6,6 +7,9 @@ import 'package:personal_expense/widget/transaction/transaction-form.dart';
 import 'package:personal_expense/widget/transaction/transaction-list.dart';
 
 void main() async {
+  // Restricte orientation
+  // SystemChrome.setPreferredOrientations(
+  //     [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(MyApp());
 }
 
@@ -62,6 +66,8 @@ class _MyHomePageState extends State<MyHomePage> {
         id: 'One', amount: 10.0, date: DateTime.now(), title: 'Shoe'),
   ];
 
+  bool _showChart = false;
+
   void _addTransaction(String title, double amount) {
     final transaction = TransactionModel(
         amount: amount, title: title, id: 'what', date: DateTime.now());
@@ -91,8 +97,29 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
+  createSwitch() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text('Show chart'),
+        Switch(
+          value: _showChart,
+          onChanged: (value) {
+            setState(() {
+              _showChart = value;
+            });
+          },
+        )
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Check orientation
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    
     final appBar = AppBar(
       title: Text('Personal Expense'),
       actions: <Widget>[
@@ -103,25 +130,39 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
     );
 
+    final transactionListWidget = (heightPercent) {
+      return Container(
+        height: (MediaQuery.of(context).size.height -
+                appBar.preferredSize.height -
+                MediaQuery.of(context).padding.top) * // padding.top is system ui navbar
+            heightPercent,
+        child: TransactionList(
+          transactions: _transactions,
+        ),
+      );
+    };
+
+    final barChart = (heightPercent) {
+      return Container(
+        height: (MediaQuery.of(context).size.height -
+                appBar.preferredSize.height -
+                MediaQuery.of(context).padding.top) *
+            heightPercent,
+        child: Chart(_recentTransactions),
+      );
+    };
+
     return Scaffold(
       appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
+          // Change Widget base on Orientation
           children: <Widget>[
-            Container(
-              height: (MediaQuery.of(context).size.height -
-                      appBar.preferredSize.height - MediaQuery.of(context).padding.top) *
-                  0.4,
-              child: Chart(_recentTransactions),
-            ),
-            Container(
-              height: (MediaQuery.of(context).size.height -
-                      appBar.preferredSize.height - MediaQuery.of(context).padding.top) *
-                  0.6,
-              child: TransactionList(
-                transactions: _transactions,
-              ),
-            )
+            if (!isLandscape) barChart(0.3),
+            if (!isLandscape) transactionListWidget(0.6),
+            if (isLandscape) createSwitch(),
+            if (isLandscape)
+              _showChart ? barChart(0.7) : transactionListWidget(0.7),
           ],
         ),
       ),
